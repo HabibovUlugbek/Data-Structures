@@ -1,120 +1,77 @@
 #include <iostream>
-#include <string>
-
 using namespace std;
 
 class Stack
 {
-private:
+
     int top;
-    int arr[5];
+    unsigned capacity;
+    int *array;
 
 public:
-    Stack()
+    Stack(unsigned capacity)
     {
+        this->capacity = capacity;
         top = -1;
-        for (int i = 0; i < 5; i++)
-        {
-            arr[i] = 0;
-        }
+        array = new int[this->capacity];
     }
-    bool IsEmpty()
+    ~Stack()
     {
-        if (top == -1)
-            return true;
-        else
-            return false;
+        delete[] array;
     }
-
     bool isFull()
     {
-        if (top == 4)
-            return true;
-        else
-            return false;
+        return (top == capacity - 1);
     }
-
-    void push(int val)
+    bool isEmpty()
+    {
+        return (top == -1);
+    }
+    void push(int item)
     {
         if (isFull())
-        {
-            cout << " stack overflow" << endl;
-        }
-        else
-        {
-            top++;
-            arr[top] = val;
-        }
+            return;
+        this->array[++this->top] = item;
+        cout << item << " pushed to stack" << endl;
     }
-
     int pop()
     {
-        if (IsEmpty())
-        {
-            cout << "stack underflow" << endl;
+        if (isEmpty())
             return 0;
-        }
-        else
-        {
-            int popValue = arr[top];
-            arr[top] = 0;
-            top--;
-            return popValue;
-        }
+        return this->array[this->top--];
     }
-
+    int peek(int position)
+    {
+        if (isEmpty())
+            return 0;
+        return this->array[this->top - position + 1];
+    }
+    void change(int position, int value)
+    {
+        this->array[position] = value;
+        cout << "Value changed at location " << position << endl;
+    }
     int count()
     {
-        return top + 1;
+        return this->top + 1;
     }
-
-    int peek(int pos)
-    {
-        if (IsEmpty())
-        {
-            cout << "stack underflow" << endl;
-            return 0;
-        }
-        else
-        {
-            return arr[pos];
-        }
-    }
-
-    void change(int pos, int val)
-    {
-        if (IsEmpty())
-        {
-            cout << "stack underflow" << endl;
-        }
-        else if (pos > top)
-        {
-            cout << "invalid position" << endl;
-        }
-        else if (pos < 0)
-        {
-            cout << "invalid position" << endl;
-        }
-        else if (pos <= top)
-        {
-            arr[pos] = val;
-            cout << "value changed at location " << pos << endl;
-        }
-    }
-
     void display()
     {
-        cout << "All values in the Stack are " << endl;
-        for (int i = 4; i >= 0; i--)
+        int i;
+        for (i = top; i >= 0; i--)
         {
-            cout << arr[i] << endl;
+            cout << array[i] << " ";
         }
     }
 };
 
 int main()
 {
-    Stack s1;
+
+    cout << "Enter the size of stack: ";
+    int size;
+    cin >> size;
+    Stack s1(size);
     int option, position, value;
 
     do
@@ -145,7 +102,7 @@ int main()
             cout << "Pop Function Called - Poped Value: " << s1.pop() << endl;
             break;
         case 3:
-            if (s1.IsEmpty())
+            if (s1.isEmpty())
                 cout << "Stack is Empty" << endl;
             else
                 cout << "Stack is not Empty" << endl;
@@ -185,6 +142,4 @@ int main()
         }
 
     } while (option != 0);
-
-    return 0;
-};
+}
